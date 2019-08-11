@@ -155,6 +155,15 @@ class CVWCDetection(data.Dataset):
     def __len__(self):
         return len(self.ids)
 
+    def get_img_name(self, index):
+        return self.ids[index][1]
+
+    def pull_PIL_image(self, index):
+        img_id = self.ids[index]
+        img = Image.open(self._imgpath % img_id, mode='r')
+        img = img.convert('RGB')
+        return img
+
     def pull_image(self, index):
         '''Returns the original image object at index in PIL form
 
@@ -255,7 +264,7 @@ class CVWCDetection(data.Dataset):
         cachedir = os.path.join(self.root, 'annotations_cache')
         aps = []
         # The PASCAL CVWC metric changed in 2010
-        use_07_metric = True
+        use_07_metric = False
         print('VOC07 metric? ' + ('Yes' if use_07_metric else 'No'))
         if output_dir is not None and not os.path.isdir(output_dir):
             os.mkdir(output_dir)
